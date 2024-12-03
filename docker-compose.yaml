@@ -1,0 +1,12 @@
+services:
+  desktop:
+    container_name: visualized_desktop  # 自定义容器名称
+    build: .
+    ports:
+      - "6080:6080"  # noVNC web接口
+      - "5901:5901"  # VNC端口
+    environment:
+      - RESOLUTION=3840x2160
+    restart: unless-stopped
+    volumes:
+      - ./shared:/root/shared  # 添加共享文件夹
