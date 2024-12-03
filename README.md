@@ -46,7 +46,7 @@
 - `docker-compose.yaml`: Docker Compose 配置文件。
 - `Dockerfile`: Docker 镜像构建文件。
 - `scripts/start.sh`: 容器启动脚本。
-- `shared/`: 共享文件夹。
+- `shared/`: 共享文件夹（需要在项目根目录下创建）。
 - `start.sh`: 容器启动脚本。
 
 ## 贡献
