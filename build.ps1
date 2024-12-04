@@ -1,3 +1,9 @@
+param(
+    [string]$BaseImage = "ubuntu:20.04",
+    [string]$ImageName = "visualised_image",
+    [string]$ContainerName = "visualised_container"
+)
+
 # Check if Docker Desktop is running
 $dockerProcess = Get-Process "*docker desktop*" -ErrorAction SilentlyContinue
 if (-not $dockerProcess) {
@@ -21,8 +27,13 @@ if (-not $dockerRunning) {
     exit 1
 }
 
+# Set environment variables for Docker Compose
+$env:BASE_IMAGE = $BaseImage
+$env:IMAGE_NAME = $ImageName
+$env:CONTAINER_NAME = $ContainerName
+
 # Stop and remove old container if exists
-if (docker ps -a | Select-String "visualized_desktop") {
+if (docker ps -a | Select-String $ContainerName) {
     Write-Host "Stopping and removing old container..."
     docker-compose down
 }
@@ -36,7 +47,7 @@ Start-Sleep -Seconds 5
 
 # Show container status
 Write-Host "`nContainer status:"
-docker ps | Select-String "visualized_desktop"
+docker ps | Select-String $ContainerName
 
 # Show access information
 Write-Host "`nBuild complete!"

@@ -20,9 +20,13 @@
    git clone <repository-url>
    cd <repository-directory>
    ```
-3. 运行 `build.ps1` 脚本：
+3. 运行 `build.ps1` 脚本（支持可选参数）：
    ```sh
+   # 基本用法
    ./build.ps1
+
+   # 使用自定义参数
+   ./build.ps1 -BaseImage "ubuntu:22.04" -ImageName "my_image" -ContainerName "my_desktop"
    ```
 4. 打开浏览器访问 `http://localhost:6080`。
 
@@ -34,9 +38,13 @@
    git clone <repository-url>
    cd <repository-directory>
    ```
-3. 运行 `run_container.sh` 脚本：
+3. 运行 `run_container.sh` 脚本（支持可选参数）：
    ```sh
+   # 基本用法
    ./run_container.sh
+
+   # 使用自定义参数
+   ./run_container.sh --base-image ubuntu:22.04 --image-name my_image --container-name my_desktop
    ```
 4. 打开浏览器访问 `http://localhost:6080`。
 

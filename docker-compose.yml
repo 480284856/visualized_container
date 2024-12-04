@@ -1,6 +1,12 @@
+version: '3'
 services:
   desktop:
-    build: .
+    image: ${IMAGE_NAME:-visualised_image}
+    container_name: ${CONTAINER_NAME:-visualised_container}
+    build:
+      context: .
+      args:
+        BASE_IMAGE: ${BASE_IMAGE:-ubuntu:20.04}
     privileged: true  # 启用特权模式以访问主机设备
     ports:
       - "5901:5901"

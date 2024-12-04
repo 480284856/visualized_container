@@ -20,9 +20,13 @@ A graphical remote desktop container based on Docker, accessible via a web brows
    git clone <repository-url>
    cd <repository-directory>
    ```
-3. Run the `build.ps1` script:
+3. Run the `build.ps1` script (optional parameters available):
    ```sh
+   # Basic usage
    ./build.ps1
+
+   # With custom parameters
+   ./build.ps1 -BaseImage "ubuntu:22.04" -ImageName "my_image" -ContainerName "my_desktop"
    ```
 4. Open your browser and go to `http://localhost:6080`.
 
@@ -34,9 +38,13 @@ A graphical remote desktop container based on Docker, accessible via a web brows
    git clone <repository-url>
    cd <repository-directory>
    ```
-3. Run the `run_container.sh` script:
+3. Run the `run_container.sh` script (optional parameters available):
    ```sh
+   # Basic usage
    ./run_container.sh
+
+   # With custom parameters
+   ./run_container.sh --base-image ubuntu:22.04 --image-name my_image --container-name my_desktop
    ```
 4. Open your browser and go to `http://localhost:6080`.
 
