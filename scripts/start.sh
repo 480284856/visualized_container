@@ -1,7 +1,4 @@
-
 #!/bin/bash
-
-source /opt/visualized/env.sh
 
 export USER=root
 export HOME=/root

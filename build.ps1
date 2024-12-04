@@ -7,12 +7,19 @@ if (-not $dockerProcess) {
     Start-Sleep -Seconds 20
 }
 
-# # Test Docker connection
-# docker info > $null 2>&1
-# if (-not $?) {
-#     Write-Host "Error: Docker is not responding. Please make sure Docker Desktop is running properly."
-#     exit 1
-# }
+# Test Docker connection
+$dockerRunning = $false
+try {
+    $null = docker ps
+    $dockerRunning = $true
+} catch {
+    $dockerRunning = $false
+}
+
+if (-not $dockerRunning) {
+    Write-Host "Error: Docker is not responding. Please make sure Docker Desktop is running properly."
+    exit 1
+}
 
 # Stop and remove old container if exists
 if (docker ps -a | Select-String "visualized_desktop") {

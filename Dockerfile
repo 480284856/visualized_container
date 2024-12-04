@@ -1,6 +1,6 @@
 FROM ubuntu:20.04
 
-# 设置环境变量
+# 环境变量设置
 ENV DEBIAN_FRONTEND=noninteractive \
     USER=root \
     HOME=/root \
@@ -26,40 +26,40 @@ RUN apt-get install -y \
     xrdp \
     git \
     python3-websockify \
-    novnc
+    novnc \
+    mesa-utils \
+    dos2unix
 
-# 安装 mesa-utils 以获取 gtf 命令
-RUN apt-get install -y mesa-utils
-
-# 下载最新的 noVNC
+# 配置 noVNC
 RUN git clone https://github.com/novnc/noVNC.git /opt/novnc && \
     ln -s /opt/novnc/vnc.html /opt/novnc/index.html
 
-# 创建 VNC 配置目录并设置密码
+# 配置 VNC
 RUN mkdir -p /root/.vnc && \
     echo "vncpass123" | vncpasswd -f > /root/.vnc/passwd && \
     chmod 600 /root/.vnc/passwd && \
     touch /root/.Xresources
 
-# 设置 xrdp 使用 xfce4
+# 配置 XRDP
 RUN echo "startxfce4" > /etc/skel/.xsession && \
-    cp /etc/skel/.xsession /root/.xsession
-
-# 设置 root 用户密码
-RUN echo 'root:your_password' | chpasswd
+    cp /etc/skel/.xsession /root/.xsession && \
+    echo 'root:your_password' | chpasswd
 
 # 复制配置文件
 COPY config/vnc/xstartup /root/.vnc/
 COPY scripts/start.sh /opt/visualized/
-COPY config/env.sh /opt/visualized/
 
-# 启动脚本
-COPY start.sh /start.sh
-RUN chmod +x /start.sh
+# 处理脚本文件
+RUN apt-get install -y dos2unix && \
+    mkdir -p /opt/visualized && \
+    dos2unix /opt/visualized/start.sh && \
+    chmod +x /opt/visualized/start.sh
+
+# 设置工作目录
+WORKDIR /root
 
 # 暴露端口
 EXPOSE 3389 5901 6080
-ENV USER=root
-# 使用自定义启动脚本
-WORKDIR /root
+
+# 启动命令
 ENTRYPOINT ["/opt/visualized/start.sh"]
