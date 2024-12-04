@@ -43,7 +43,7 @@
    # 基本用法
    ./run_container.sh
 
-   # 使用自定义参数
+   # 使用自定义参数（只有 ubuntu 镜像可用）
    ./run_container.sh --base-image ubuntu:22.04 --image-name my_image --container-name my_desktop
    ```
 4. 打开浏览器访问 `http://localhost:6080`。

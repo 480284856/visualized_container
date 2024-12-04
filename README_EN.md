@@ -25,7 +25,7 @@ A graphical remote desktop container based on Docker, accessible via a web brows
    # Basic usage
    ./build.ps1
 
-   # With custom parameters
+   # With custom parameters(only ubuntu os is applicable)
    ./build.ps1 -BaseImage "ubuntu:22.04" -ImageName "my_image" -ContainerName "my_desktop"
    ```
 4. Open your browser and go to `http://localhost:6080`.
@@ -43,7 +43,7 @@ A graphical remote desktop container based on Docker, accessible via a web brows
    # Basic usage
    ./run_container.sh
 
-   # With custom parameters
+   # With custom parameters(only ubuntu os is applicable)
    ./run_container.sh --base-image ubuntu:22.04 --image-name my_image --container-name my_desktop
    ```
 4. Open your browser and go to `http://localhost:6080`.
