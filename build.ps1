@@ -41,4 +41,5 @@ docker ps | Select-String "visualized_desktop"
 # Show access information
 Write-Host "`nBuild complete!"
 Write-Host "Please visit: http://localhost:6080"
+Write-Host "password: 123123"
 Write-Host "Shared folder location: $((Get-Location).Path)\shared"

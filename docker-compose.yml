@@ -1,0 +1,43 @@
+services:
+  desktop:
+    build: .
+    privileged: true  # 启用特权模式以访问主机设备
+    ports:
+      - "5901:5901"
+      - "6080:6080"
+      - "3389:3389"
+    volumes:
+      - ./shared:/home/amos/shared
+    devices:
+      - /dev/fuse:/dev/fuse  # 映射FUSE设备
+    cap_add:
+      - SYS_ADMIN  # 添加必要的系统权限
+    security_opt:
+      - apparmor:unconfined  # 禁用AppArmor限制
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=all
+      - NVIDIA_REQUIRE_CUDA=cuda>=12.0
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+          cpus: '2'
+          memory: 4G
+        limits:
+          cpus: '4'
+          memory: 8G
+    runtime: nvidia
+    shm_size: '4gb'  # 增加共享内存大小
+    ulimits:  # 增加系统限制
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    ipc: host
+    network_mode: bridge

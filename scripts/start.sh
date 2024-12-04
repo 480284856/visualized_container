@@ -1,40 +1,78 @@
 #!/bin/bash
 
-export USER=root
-export HOME=/root
+export USER=amos
+export HOME=/home/amos
 
 # 删除可能存在的旧锁文件
 rm -rf /tmp/.X*
 rm -rf /tmp/.X11-unix
-rm -rf /root/.vnc/*.pid
-rm -rf /root/.vnc/*.log
+rm -rf /home/amos/.vnc/*.pid
+rm -rf /home/amos/.vnc/*.log
+
+# 确保.Xauthority存在
+touch $HOME/.Xauthority
+chown amos:amos $HOME/.Xauthority
+
+# 设置字体路径
+FONT_PATH="/usr/share/fonts/X11/misc,/usr/share/fonts/X11/75dpi,/usr/share/fonts/X11/100dpi,/usr/share/fonts/X11/Type1"
+
+# 创建VNC配置文件
+mkdir -p $HOME/.vnc
+cat > $HOME/.vnc/config << EOL
+# VNC性能优化配置
+geometry=3840x2160
+depth=24
+dpi=96
+AlwaysShared=1
+NeverShared=0
+RemoteResize=1
+FrameRate=60
+UseIPv6=0
+UseSHM=1
+EOL
 
 # 启动 VNC 服务器
-vncserver :1 -geometry 3840x2160 -depth 24
+vncserver :1 \
+    -geometry 3840x2160 \
+    -depth 24 \
+    -rfbauth $HOME/.vnc/passwd \
+    -fp $FONT_PATH \
+    -alwaysshared \
+    -dpi 96 \
+    -desktop "Amos Desktop" \
+    -deferupdate 15
 
-# 等待 X 服务器启动
-sleep 5
+# 等待 VNC 服务器启动
+sleep 2
+
+# 确保 VNC 服务器已启动
+if ! ps aux | grep -v grep | grep -q Xtightvnc; then
+    echo "VNC server failed to start. Check the logs for details."
+    exit 1
+fi
 
 # 设置 DISPLAY 环境变量
 export DISPLAY=:1
 
-# 使用 gtf 生成新的模式行
-MODELINE=$(gtf 3840 2160 60 | grep -oP '(?<=Modeline ).*')
+# 等待X服务器完全启动
+for i in $(seq 1 10); do
+    if xset q &>/dev/null; then
+        break
+    fi
+    sleep 1
+done
 
-# 从 MODELINE 提取模式名称
-MODENAME=$(echo $MODELINE | awk '{print $1}' | tr -d '"')
-
-# 添加新模式
-xrandr --newmode $MODELINE
-
-# 获取当前输出名称，可能是 "Xvnc1"
-OUTPUT=$(xrandr | grep " connected" | awk '{print $1}')
-
-# 将新模式添加到输出设备
-xrandr --addmode $OUTPUT $MODENAME
-
-# 设置输出设备使用新模式
-xrandr --output $OUTPUT --mode $MODENAME
+# 配置桌面环境性能
+if xset q &>/dev/null; then
+    # 禁用屏幕保护和节能
+    xset s off
+    xset -dpms
+    xset s noblank
+    
+    # 优化X性能
+    xset r rate 200 40
+    xset m 3/2 4
+fi
 
 # 启动 websockify，将 VNC 流量转发到 noVNC
 websockify --web=/opt/novnc --wrap-mode=ignore 6080 localhost:5901
