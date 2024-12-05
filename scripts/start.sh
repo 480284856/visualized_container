@@ -49,12 +49,12 @@ mkdir -p $HOME/.vnc
 cat > $HOME/.vnc/config << EOL
 # VNC性能优化配置
 geometry=3840x2160
-depth=24
+depth=16
 dpi=96
 AlwaysShared=1
 NeverShared=0
-RemoteResize=1
-FrameRate=60
+RemoteResize=0
+FrameRate=15
 UseIPv6=0
 UseSHM=1
 EOL
@@ -65,13 +65,15 @@ ibus-daemon -d -x &
 # Start VNC server (your existing VNC server start command)
 vncserver :1 \
     -geometry 3840x2160 \
-    -depth 24 \
+    -depth 16 \
     -rfbauth $HOME/.vnc/passwd \
-    -fp $FONT_PATH \
     -alwaysshared \
     -dpi 96 \
     -desktop "Amos Desktop" \
-    -deferupdate 15
+    -deferupdate 1 \
+    -nolisten tcp \
+    -economictranslate \
+    -lazytight
 
 # 等待 VNC 服务器启动
 sleep 2
@@ -95,15 +97,16 @@ done
 
 # 配置桌面环境性能
 if xset q &>/dev/null; then
-    # 禁用屏幕保护和节能
+    # 禁用屏幕保护
     xset s off
-    xset -dpms
-    xset s noblank
-    
-    # 优化X性能
-    xset r rate 200 40
-    xset m 3/2 4
+    # 禁用鼠标加速
+    xset m 0 0
+
+    # 配置默认浏览器
+    xdg-settings set default-web-browser firefox.desktop
+    # 确保 xdg-open 可以正常工作
+    dbus-launch --exit-with-session true
 fi
 
 # 启动 websockify，将 VNC 流量转发到 noVNC
-websockify --web=/opt/novnc --wrap-mode=ignore 6080 localhost:5901
+websockify --web=/opt/novnc --wrap-mode=ignore --heartbeat=30 6080 localhost:5901

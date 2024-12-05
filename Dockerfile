@@ -55,9 +55,10 @@ RUN sed -i 's/archive.ubuntu.com/mirrors.aliyun.com/g' /etc/apt/sources.list && 
         pulseaudio \
         pavucontrol \
         xfce4-pulseaudio-plugin \
-        # 浏览器
+        # 浏览器和xdg工具
         firefox \
         chromium-browser \
+        xdg-utils \
         # FUSE支持
         fuse \
         libfuse2 \
