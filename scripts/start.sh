@@ -1,5 +1,33 @@
 #!/bin/bash
 
+# Initialize GNOME Keyring
+if [ -n "$DESKTOP_SESSION" ]; then
+    eval $(gnome-keyring-daemon --start)
+    export SSH_AUTH_SOCK
+fi
+
+# Setup Input Method
+export GTK_IM_MODULE=ibus
+export XMODIFIERS=@im=ibus
+export QT_IM_MODULE=ibus
+
+# Start iBus daemon
+ibus-daemon -d -x
+
+# Set up environment variables
+echo '
+# GNOME Keyring environment variables
+if [ -n "$DESKTOP_SESSION" ]; then
+    eval $(gnome-keyring-daemon --start)
+    export SSH_AUTH_SOCK
+    export GTK_IM_MODULE=ibus
+    export XMODIFIERS=@im=ibus
+    export QT_IM_MODULE=ibus
+fi' >> ~/.bashrc
+
+# Make script executable
+chmod +x ~/.bashrc
+
 export USER=amos
 export HOME=/home/amos
 
@@ -31,7 +59,10 @@ UseIPv6=0
 UseSHM=1
 EOL
 
-# 启动 VNC 服务器
+# Start iBus before starting VNC server
+ibus-daemon -d -x &
+
+# Start VNC server (your existing VNC server start command)
 vncserver :1 \
     -geometry 3840x2160 \
     -depth 24 \

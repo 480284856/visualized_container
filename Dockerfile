@@ -66,7 +66,14 @@ RUN sed -i 's/archive.ubuntu.com/mirrors.aliyun.com/g' /etc/apt/sources.list && 
         xserver-xorg-video-dummy \
         xserver-xorg-video-fbdev \
         # 运行cursor的依赖
-        libgconf-2-4 libatk1.0-0 libatk-bridge2.0-0 libgdk-pixbuf2.0-0 libgtk-3-0 libgbm-dev libnss3-dev libxss-dev && \
+        libgconf-2-4 libatk1.0-0 libatk-bridge2.0-0 libgdk-pixbuf2.0-0 libgtk-3-0 libgbm-dev libnss3-dev libxss-dev \
+        # Add these new packages
+        gnome-keyring \
+        libsecret-1-0 \
+        libsecret-1-dev \
+        ibus \
+        ibus-gtk \
+        ibus-gtk3 && \
     # 清理apt缓存
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*

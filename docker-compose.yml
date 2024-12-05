@@ -24,6 +24,9 @@ services:
       - NVIDIA_VISIBLE_DEVICES=all
       - NVIDIA_DRIVER_CAPABILITIES=all
       - NVIDIA_REQUIRE_CUDA=cuda>=12.0
+      - DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/1000/bus
+      - GNOME_KEYRING_CONTROL=/run/user/1000/keyring
+      - DESKTOP_SESSION=xfce
     deploy:
       resources:
         reservations:
@@ -46,4 +49,4 @@ services:
         soft: 65536
         hard: 65536
     ipc: host
-    network_mode: bridge
+    network_mode: network_web_database
